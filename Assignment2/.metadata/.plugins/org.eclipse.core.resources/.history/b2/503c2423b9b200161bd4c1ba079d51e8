@@ -1,0 +1,110 @@
+import java.io.*;
+
+public class Main {
+	public static void main(String[] args){
+		/*PROBLEMS
+		 *  - buildLabFromFile function is the Labs class is not returning the deviceName and valueTag for the Lab
+		 *  - Lab(String labName) not sure what i got to do apart from setting the this.labName = labName, and start the devices vector.
+		 *  - MobileDevice class is really unfriendly
+		 */
+		
+		/* TASK 1
+		 * 1) build labs from file - at least two labs
+		 * 2) print lab and devices from it
+		 * 
+		 * 3) The device must be printed with the following format:
+			(device name, value tag) - if the device is not assigned to a lab, and
+			(device name, value tag => lab name) RentSettings (rent date, due date, lab name, borrowed) 
+			- if the device belongs to a lab.
+		 */		
+		System.out.println("* TASK 1 *");
+		Labs labs = new Labs(2);
+		//building first lab
+		Lab york = labs.addDevicesToLab("Seneca@York", "Seneca@York.txt");//reads file
+		Lab newnham = labs.addDevicesToLab("Newnham", "Newnham.txt");
+		
+		/*
+		 * TASK 2 
+		 * 1) ask for a device that is not in any lab inventory. 
+		 * For example, ask about a device that has the name “Unknown”
+		 */
+		System.out.println("\n* TASK 2 *");
+		MobileDevice device = new MobileDevice("Android20", 20);
+        Lab lab = labs.isThereDeviceInLabs(device);
+        if(lab != null)
+        	System.out.println("Device " + device.toString() + " exists in " + lab.labName + ".");
+        else
+        	System.out.println("Device " + device.toString() + " does not exist!");
+		
+		/*
+		 * TASK 3 
+		 * 1) ask for a device that is in a lab inventory
+		 * 2) issue a rent request and print the device object
+		 * 3) issue the same rent request and print the device object
+		 * 4) return the device
+		 * 5) issue the rent request with new dates and print the device object
+		 */
+		System.out.println("\n* TASK 3 *");
+		
+		MobileDevice device2 = new MobileDevice("Android", 25);
+		
+		if(york.rentRequest(device2, "10/30/2016", "11/10/2016")){
+			System.out.println(Helper.printAvailable(device2, "10/30/2016", york));
+			System.out.println("wanted = " + device2.deviceName() + " => " + york.labName + " " + device2.rs);
+			System.out.println(Helper.printUnavailable(device2, "10/30/2016"));
+			System.out.println(Helper.printAvailable(device2, "11/30/2016", york));
+		}else
+			System.out.println(Helper.printUnavailable(device2, "10/30/2016"));
+		
+		if(york.rentRequest(device2, "11/30/2016", "12/10/2016"))
+			System.out.println("wanted = " + device2.deviceName() + " => " + york.labName + " " + device2.rs);
+		
+		/*Return example
+		 * 
+		 * Device (Android, 25) is availble at 10/30/2016 from lab: Seneca@York 
+		 * wanted = (Android, 25 => Seneca@York) RentSettings{rentDate='10/30/2016', dueDate='11/10/2016'Seneca@York, borrowed=true} 
+		 * Device (Android, 25 => Seneca@York) RentSettings{rentDate='10/30/2016', dueDate='11/10/2016'Seneca@York, borrowed=true} is not availble for 10/30/2016 
+		 * Device (Android, 25) is availble at 11/30/2016 from lab: Seneca@York 
+		 * wanted = (Android, 25 => Seneca@York) RentSettings{rentDate='11/30/2016', dueDate='12/10/2016'Seneca@York, borrowed=true}
+		 */
+		
+		/*
+		 * TASK 4
+		 * 1) ask for the same device in all labs
+		 * 2) look for the same device in all labs and return all the labs where the device is in the lab inventory
+		 * 3) look for the same device in all labs and return all the labs where the device is available to be rented.
+		 */
+		System.out.println("\n* TASK 4 *");
+		MobileDevice device3 = new MobileDevice("Android", 25);
+		
+		if(newnham.rentRequest(device3, "10/30/2016", "12/10/2016")){
+			System.out.println(Helper.printAvailable(device3, "10/30/2016", newnham));
+			System.out.println("wanted = " + device3.deviceName() + " => " + newnham.labName + " " + device3.rs);
+			System.out.println(Helper.printUnavailable(device3, "10/30/2016") + " " + device3.rs);
+			System.out.println(Helper.printAvailable(device3, "10/30/2016", newnham));
+			System.out.println("wanted = " + device3.deviceName() + " => " + newnham.labName + " " + device3.rs);
+		}
+		
+		/*Return example
+		 * 
+		 * Device (Android, 25) is availble at 10/30/2016 from lab: Newnham 
+		 * wanted = (Android, 25 => Newnham) RentSettings{rentDate='10/30/2016', dueDate='12/10/2016'Newnham, borrowed=true} 
+		 * Device (Android, 25 => Newnham) RentSettings{rentDate='10/30/2016', dueDate='12/10/2016'Newnham, borrowed=true} is not availble for 10/30/2016 
+		 * Device (Android, 25) is availble at 10/30/2016 from lab: Newnham 
+		 * wanted = (Android, 25 => Newnham) RentSettings{rentDate='10/30/2016', dueDate='12/10/2016'Newnham, borrowed=true}
+		 */
+		
+		/*
+		 * TASK 5
+		 * 1) calculate the greatest value tag of all the devices from a lab
+		 */
+		System.out.println("\n* TASK 5 *");
+		int maxValueTag = newnham.findMaximumValueTag();
+		System.out.println("The greatest value tag of all the devices from lab newnham is " + maxValueTag);
+		/*
+		 * TASK 6
+		 * 1) inquire about a device: is it rented?, is it overdue?, could it be found in more than one lab?, when can it be rented? 
+		 */
+		System.out.println("\n* TASK 6 *");
+	}
+}

@@ -1,0 +1,37 @@
+import java.*;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.Vector;
+
+public class Main {
+	public static void main(String[] args){
+		try{
+			@SuppressWarnings("resource")
+			BufferedReader br = new BufferedReader(new FileReader("Seneca@York.txt"));
+			
+			@SuppressWarnings("unused")
+			int lineCounter = 0, valueTag = 0;
+			Lab lab;
+			String deviceName = "", lines;
+			
+			System.out.println("Lab = Seneca@York\n[");
+		
+			while((lines = br.readLine()) != null){
+				String[] line = lines.split(",");
+				deviceName = line[0];
+				valueTag = Integer.parseInt(line[1]);
+				
+				lineCounter++;
+			}
+		}catch(FileNotFoundException ex) {
+			System.out.println("Unable to open file 'Seneca@York'");                
+		}catch(IOException ex) {
+			System.out.println("Error reading file 'Seneca@York'"); 
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		System.out.println("]");
+	}
+}

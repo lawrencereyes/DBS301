@@ -1,0 +1,85 @@
+import java.util.Vector;
+
+public class Lab implements MaxTagValue{
+	public String labName; // lab name
+	public Vector<MobileDevice> devices; // data structure that keeps all devices
+	
+	public Lab(String labName) {
+        this.labName = labName;
+        devices = new Vector<MobileDevice>(4, 2);
+    }
+
+    public void addDevice(MobileDevice md) {
+        devices.addElement(md);
+    }
+	
+	public int findMaximumValueTag() {
+		int maxValueTag = devices.get(0).valueTag;
+		
+		for(int i = 0; i < devices.size(); i++){
+			if(devices.get(i).valueTag > maxValueTag){
+				maxValueTag = devices.get(i).valueTag;
+			}	
+		}
+		return maxValueTag;
+	}
+
+	//don't think is working
+    public boolean isThereDevice(MobileDevice md) {
+        boolean found = false;
+        
+        for(MobileDevice dev : devices){
+        	if(dev.equals(md))
+        		found = true;
+        }   	
+        return found;
+    }
+    
+    /*NOT FINSIHED*/
+    //Need to check if the device is already rented or not and when it is going to be available
+  	public boolean rentRequest(MobileDevice wanted, String requestDate, String dueDate){
+  		boolean available = false;
+		try {
+			if(Helper.isValidDate(requestDate) && Helper.isValidDate(dueDate)){
+				if(Helper.timeDifference(requestDate, dueDate) < 0){
+					if(wanted.isRented(this))//CHECK
+						available = true;
+					else
+						System.out.println("Cannot be rented");
+				}else
+					throw new DateFormatException();
+			}
+		} catch (DateFormatException e) {
+			e.printStackTrace();
+		}
+  		return available;
+  	}
+  	
+  	/*EQUALS TOSTRING HASHCODE*/
+	@Override
+    public boolean equals(Object o) {
+    	if(this == o)
+			return true;
+		if(o == null)
+			return false;
+		if(!(o instanceof Lab))
+			return false;
+		return ((Lab)o).labName.equals(labName);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = labName != null ? labName.hashCode() : 0;
+        result = 31 * result + (devices != null ? devices.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        String r = "";
+        
+        for(MobileDevice device : devices)
+        	r += device.deviceName() + " => " + labName + '\n';
+        return r;
+    }
+}

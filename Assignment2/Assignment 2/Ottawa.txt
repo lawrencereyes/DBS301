@@ -1,0 +1,5 @@
+Lenovo,23
+Lenovo,-06
+Lenovo,66
+Lenovo,94
+Lenovo,-93

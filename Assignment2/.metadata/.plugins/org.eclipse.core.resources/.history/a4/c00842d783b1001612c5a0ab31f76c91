@@ -1,0 +1,100 @@
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+
+public class Labs {
+	public Lab[] labs; // an array that stores all labs
+	public int numberOfLabs; // number of labs in collection
+	int counter = 0;
+	public Labs(int numberOfLabs) {
+		this.numberOfLabs = numberOfLabs;
+		labs = new Lab[numberOfLabs];	
+	}
+	
+	public Lab addDevicesToLab(String labName, String labFileName) {
+        Lab lab = buildLabFromFile(labName, labFileName);
+        System.out.println("Lab = " + labName + "\n[\n" + lab + "]");
+        return lab;
+    }
+	
+	public Lab buildLabFromFile(String labName, String fileName){
+		Lab lab = new Lab(labName);
+		MobileDevice md = null;
+		String lines;
+		
+		try(BufferedReader br = new BufferedReader(new FileReader(fileName))){
+			int valueTag = 0;
+			String deviceName = "";
+			
+			while((lines = br.readLine()) != null){
+				String[] line = lines.split(",");
+				deviceName = line[0];
+				valueTag = Integer.parseInt(line[1]);
+				
+				md = new MobileDevice(deviceName, valueTag);
+				md.setLab(lab);
+				lab.addDevice(md);
+				
+			}		
+			labs[counter] = lab;
+			System.out.println("Counter: " + counter);
+			counter++;
+			System.out.println("counter: " + counter + " lab: " + lab);
+		}catch(FileNotFoundException ex) {
+			System.out.println("Unable to open file '" + fileName + "'");                
+		}catch(IOException ex) {
+			System.out.println("Error reading file '" + fileName + "'"); 
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return lab;
+	}
+	
+	public Lab rentDeviceAvailable(MobileDevice md, String requestDate, String dueDate) {
+		for(Lab lab : labs){
+			if(md.rentDevice(requestDate, dueDate, lab))
+				return lab;
+		}
+		return null;
+	}
+	
+	public Lab isThereDeviceInLabs(MobileDevice md) {
+		for(Lab lab : labs){
+			if(lab.isThereDevice(md))
+				return lab;
+        }
+        return null;
+	}
+	
+	/*EQUALS TOSTRING HASHCODE*/
+	/*
+	@Override
+    public boolean equals(Object o) {
+    	if(this == o)
+			return true;
+		if(o == null)
+			return false;
+		if(!(o instanceof Labs))
+			return false;
+		//return ((Labs)o).numberOfLabs.equals(numberOfLabs);
+		return false;
+    } 
+
+    @Override
+    public int hashCode() {
+        int result = != null ? .hashCode() : 0;
+        result = 31 * result + ( != null ? .hashCode() : 0);
+        return result;
+    }
+    
+    @Override
+    public String toString() {
+        String r = "";
+        
+        for(MobileDevice device : devices)
+        	r += device.deviceName() + " => " + labName + '\n';
+        return r;
+    }
+    */
+}

@@ -1,0 +1,71 @@
+import java.io.*;
+
+public class Main {
+	public static void main(String[] args){
+		/*PROBLEMS
+		 *  - buildLabFromFile function is the Labs class is not returning the deviceName and valueTag for the Lab
+		 *  - Lab(String labName) not sure what i got to do apart from setting the this.labName = labName, and start the devices vector.
+		 *  - MobileDevice class is really unfriendly
+		 */
+		
+		/* TASK 1
+		 * 1) build labs from file - at least two labs
+		 * 2) print lab and devices from it
+		 * 
+		 * 3) The device must be printed with the following format:
+			(device name, value tag) - if the device is not assigned to a lab, and
+			(device name, value tag => lab name) RentSettings (rent date, due date, lab name, borrowed) 
+			- if the device belongs to a lab.
+		 */
+		Labs labs = new Labs(2);
+		
+		System.out.println("* TASK 1 *");
+		//building first lab
+		labs.addDevicesToLab("Seneca@York", "Seneca@York.txt");//reads file
+		
+		labs.addDevicesToLab("Newnham", "Newnham.txt");
+	
+		/*
+		 * TASK 2 
+		 * 1) ask for a device that is not in any lab inventory. 
+		 * For example, ask about a device that has the name “Unknown”
+		 */
+		System.out.println("* TASK 2 *");
+		MobileDevice device = new MobileDevice("Android20", 20);
+        Lab lab = labs.isThereDeviceInLabs(device);
+        if(lab != null)
+        	System.out.println("Device " + device.toString() + " exists in " + lab.labName + ".");
+        else
+        	System.out.println("Device " + device.toString() + " does not exist!");
+		
+		/*
+		 * TASK 3 
+		 * 1) ask for a device that is in a lab inventory
+		 * 2) issue a rent request and print the device object
+		 * 3) issue the same rent request and print the device object
+		 * 4) return the device
+		 * 5) issue the rent request with new dates and print the device object
+		 */
+		System.out.println("* TASK 3 *");
+		
+		/*
+		 * TASK 4
+		 * 1) ask for the same device in all labs
+		 * 2) look for the same device in all labs and return all the labs where the device is in the lab inventory
+		 * 3) look for the same device in all labs and return all the labs where the device is available to be rented.
+		 */
+		System.out.println("* TASK 4 *");
+		
+		/*
+		 * TASK 5
+		 * 1) calculate the greatest value tag of all the devices from a lab
+		 */
+		System.out.println("* TASK 5 *");
+		
+		/*
+		 * TASK 6
+		 * 1) inquire about a device: is it rented?, is it overdue?, could it be found in more than one lab?, when can it be rented? 
+		 */
+		System.out.println("* TASK 6 *");
+	}
+}

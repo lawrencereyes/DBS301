@@ -1,0 +1,5 @@
+Lenovo,23
+Sony,91
+LG,13
+Blackberry,-12
+Nokia,-82

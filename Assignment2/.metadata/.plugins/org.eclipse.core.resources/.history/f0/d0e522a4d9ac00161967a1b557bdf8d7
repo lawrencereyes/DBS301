@@ -1,0 +1,51 @@
+import java.io.*;
+
+public class Main {
+	public static void main(String[] args){
+		/* TASK 1
+		 * 1) build labs from file - at least two labs
+		 * 2) print lab and devices from it
+		 * 
+		 * 3) The device must be printed with the following format:
+			(device name, value tag) - if the device is not assigned to a lab, and
+			(device name, value tag => lab name) RentSettings (rent date, due date, lab name, borrowed) 
+			- if the device belongs to a lab.
+		 */
+		Labs xLab = new Labs(2);
+		System.out.println("* TASK1 *");
+		xLab.buildLabFromFile("Seneca@York", "Seneca@York.txt");
+		xLab.buildLabFromFile("Newnham", "Newnham.txt");
+		
+		/*
+		 * TASK 2 
+		 * 1) ask for a device that is not in any lab inventory. 
+		 * For example, ask about a device that has the name “Unknown”
+		 */
+		
+		/*
+		 * TASK 3 
+		 * 1) ask for a device that is in a lab inventory
+		 * 2) issue a rent request and print the device object
+		 * 3) issue the same rent request and print the device object
+		 * 4) return the device
+		 * 5) issue the rent request with new dates and print the device object
+		 */
+		
+		/*
+		 * TASK 4
+		 * 1) ask for the same device in all labs
+		 * 2) look for the same device in all labs and return all the labs where the device is in the lab inventory
+		 * 3) look for the same device in all labs and return all the labs where the device is available to be rented.
+		 */
+		
+		/*
+		 * TASK 5
+		 * 1) calculate the greatest value tag of all the devices from a lab
+		 */
+		
+		/*
+		 * TASK 6
+		 * 1) inquire about a device: is it rented?, is it overdue?, could it be found in more than one lab?, when can it be rented? 
+		 */
+	}
+}

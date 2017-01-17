@@ -1,0 +1,209 @@
+package Ferguson013;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Vector;
+
+public class Labs {
+
+    public Lab[] labs;        // a collection of labs of type array
+    public int numberOfLabs;  // number of labs in collection
+    int labNo = 0;
+
+	/*
+	 * gets lab array
+	 */
+    public Lab[] getLabs() {
+		return labs;
+	}
+
+	/*
+	 * Setter for the lab array
+	 * @param labs - array of lab objects
+	 */
+	public void setLabs(Lab[] labs) {
+		this.labs = labs;
+	}
+
+	/*
+	 * gets number of labs
+	 * @return numberOfLabs
+	 */
+	public int getNumberOfLabs() {
+		return numberOfLabs;
+	}
+
+	/*
+	 * Setter for the number of labs
+	 * @param 
+	 */
+	public void setNumberOfLabs(int numberOfLabs) {
+		this.numberOfLabs = numberOfLabs;
+	}
+
+	/*
+	 * @Constructor
+	 */
+	public Labs(int numberOfLabs) {
+        setNumberOfLabs(numberOfLabs);
+        labs = new Lab[numberOfLabs];
+    }
+
+	/*
+	 * Adds the mobile devices to the lab object
+	 * @param labName - name of the lab
+	 * @param fileName - name of the file
+	 */
+    public Lab addDevicesToLab(String labName, String labFileName) {
+
+        Lab lab = buildLabFromFile(labName, labFileName);
+        System.out.println("Lab = " + labName + "\n[\n" + lab + "]");
+        return lab;
+    }
+    
+    /*
+     * Builds a lab object frpom a text file
+     * @param labName - name of the lab
+     * @param fileName - name of the file
+     * @return lab object
+     */
+    public Lab buildLabFromFile(String labName, String fileName) {
+    	
+        Lab lab = new Lab(labName);
+        MobileDevice md = null;
+        String s;
+
+        try (BufferedReader br = new BufferedReader(new FileReader("./bin/Ferguson013/" + fileName))) {
+
+            while ((s = br.readLine()) != null) {
+            	String[] pieces = s.split(","); // Break the string by the comma and store it in a string array
+            	
+            	String deviceName = pieces[0]; // Make a new string with the first part of the old string 
+            	String valueTag = pieces[1];
+            	
+            	md = new MobileDevice(deviceName, Integer.parseInt(valueTag));
+            	
+            	md.setLab(lab);
+            	lab.addDevice(md);
+            	
+            	
+            }
+            
+            labs[labNo] = lab;
+            labNo++;
+            
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+        		
+        return lab;
+    }
+
+	public Lab isThereDeviceInLabs(MobileDevice md) {
+		try{
+	        for(int i = 0; i < numberOfLabs; i++){
+	        	if(labs[i].isThereDevice(md))
+	        		return labs[i];
+	        }
+		}catch(NullPointerException e){
+			e.printStackTrace();
+		}
+		return null;
+    }
+
+
+    public Lab rentDeviceAvailable(MobileDevice md, String requestDate, String dueDate) {
+    	
+        Lab foundLab = null;
+        
+        		foundLab = this.isThereDeviceInLabs(md);
+        		
+        		if(foundLab != null){
+        			md.setLab(foundLab);
+	        		if(foundLab.rentRequest(md, dueDate,requestDate)){
+	        			return foundLab;
+	        		}
+	        		else{
+	        	        System.out.println("Cannot be rented, this device becomes available " + md.rs.getDueDate());
+	        		}
+        		}
+        return foundLab;
+    }
+    
+    public Vector<Lab> checkForDeviceInLabs(MobileDevice md){
+    	
+    	Vector<Lab> temp = new Vector<Lab>();
+    	
+    	for(int i = 0; i < numberOfLabs; i++)
+    	{
+    		if(labs[i].isThereDevice(md))
+    			temp.addElement(labs[i]);
+    	}
+    	
+    	return temp;
+    	
+    }
+    
+    public Vector<Lab> checkForRentedDeviceInLabs(MobileDevice md){
+    	
+    	Vector<Lab> temp = new Vector<Lab>();
+    	
+    	for(int i = 0; i < numberOfLabs; i++)
+    	{
+    		if(labs[i].rentable(md))
+    			temp.addElement(labs[i]);
+    	}
+    	
+    	return temp;
+    	
+    }
+    
+    public int findMax(){
+    	int max = 0;
+    	
+		for(int i = 0; i < numberOfLabs; i++){
+			max = labs[i].findMaximumValueTag();
+		}
+    	
+		return max;
+    }
+    
+    @Override
+    public String toString() {
+        String s = "";
+        s += "";
+        return s;
+    }
+
+    @Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + labNo;
+		result = prime * result + Arrays.hashCode(labs);
+		result = prime * result + numberOfLabs;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Labs other = (Labs) obj;
+		if (labNo != other.labNo)
+			return false;
+		if (!Arrays.equals(labs, other.labs))
+			return false;
+		if (numberOfLabs != other.numberOfLabs)
+			return false;
+		return true;
+	}
+
+
+}

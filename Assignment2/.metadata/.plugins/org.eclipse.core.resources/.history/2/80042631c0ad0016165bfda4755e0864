@@ -1,0 +1,68 @@
+import java.util.Vector;
+
+public class Lab implements MaxTagValue{
+	public String labName; // lab name
+	public Vector<MobileDevice> devices; // data structure that keeps all devices
+	
+	public Lab(String labName) {
+        this.labName = labName;
+        devices = new Vector<MobileDevice>(4, 2);
+    }
+
+    public void addDevice(MobileDevice md) {
+        md = new MobileDevice(md.deviceName, md.valueTag);
+        System.out.println("(" + md.deviceName + "," + md.valueTag + " => " + labName + ")");
+        //devices.add(md);
+    }
+	
+	public int findMaximumValueTag() {
+		int maxValueTag = devices.get(0).valueTag;
+		
+		for(int i = 0; i < devices.size(); i++){
+			if(devices.get(i).valueTag > maxValueTag){
+				maxValueTag = devices.get(i).valueTag;
+			}
+		}
+		
+		return maxValueTag;
+	}
+	
+	@Override
+    public String toString() {
+        String r = "";
+        //TODO
+        return r;
+    }
+
+    public boolean isThereDevice(MobileDevice md) {
+        boolean found = false;
+        //TODO
+        return found;
+    }
+    @Override
+    public boolean equals(Object o) {
+        //TODO
+        return false;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = labName != null ? labName.hashCode() : 0;
+        result = 31 * result + (devices != null ? devices.hashCode() : 0);
+        return result;
+    }
+
+	//Need to check if the device is already rented or not and when it is going to be available
+	public boolean rentRequest(MobileDevice wanted, String requestDate, String dueDate){
+		boolean borrowed = false;
+		//Labs lab = new Labs(wanted, requestDate, dueDate);
+		
+		for(int i = 0; i < devices.size(); i++){
+			//wanted = new MobileDevice(requestDate, dueDate, lab);
+			
+		}
+		
+		return borrowed;
+	}
+}

@@ -1,0 +1,60 @@
+import java.io.*;
+
+public class Labs {
+	public Labs[] labs; // an array that stores all labs
+	public int numberOfLabs; // number of labs in collection
+	
+	public Labs(int numberOfLabs) {
+		this.numberOfLabs = numberOfLabs;
+		labs = new Labs[numberOfLabs];
+	}
+	
+	//well make another constructor? i don't know, for real
+	public Labs( MobileDevice md, String rentDate, String dueDate){
+		rentDeviceAvailable(md, rentDate, dueDate);
+	}
+	
+	//STILL GOTTA CHECK THIS FUNCTION... STILL NEED TO RETURN THE LAB OBJECT BUT I MIGHT NEED TO CREATE THE OBJECT OUTSIDE THE FUNCTION
+	public Lab buildLabFromFile(String labName, String fileName){
+		try{
+			@SuppressWarnings("resource")
+			BufferedReader br = new BufferedReader(new FileReader(fileName));
+			
+			@SuppressWarnings("unused")
+			int lineCounter = 0, valueTag = 0;
+			Lab lab;
+			String deviceName = "", lines;
+			MobileDevice md;
+			
+			while((lines = br.readLine()) != null){
+				String[] line = lines.split(",");
+				deviceName = line[0];
+				valueTag = Integer.parseInt(line[1]);
+				
+				System.out.println("(" + deviceName + "," + valueTag + " => " + labName + ")");
+				
+				md = new MobileDevice(deviceName, valueTag);
+				lab = new Lab(deviceName, md);
+				
+				lineCounter++;
+				
+				return lab;
+			}			
+		}catch(FileNotFoundException ex) {
+			System.out.println("Unable to open file '" + fileName + "'");                
+		}catch(IOException ex) {
+			System.out.println("Error reading file '" + fileName + "'"); 
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		return null;//not supposed to be here
+	}
+	
+	//this is annoying me... got to figure out what i got to do with this one... definitely wrong
+	public Lab rentDeviceAvailable(MobileDevice md, String requestDate, String dueDate) {
+		Lab lab = new Lab(md, requestDate, dueDate);
+		
+		return lab;
+	}
+}

@@ -1,0 +1,66 @@
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+
+public class Labs {
+	public Labs[] labs; // an array that stores all labs
+	public int numberOfLabs; // number of labs in collection
+	
+	String labName;
+	
+	public Labs(int numberOfLabs) {
+		this.numberOfLabs = numberOfLabs;
+		labs = new Labs[numberOfLabs];
+	}
+	
+	public Lab addDevicesToLab(String labName, String labFileName) {
+        Lab lab = buildLabFromFile(labName, labFileName);
+        System.out.println("Lab = " + labName + "\n[\n" + lab + "\n]");
+        return lab;
+    }
+	
+	//STILL GOTTA CHECK THIS FUNCTION... STILL NEED TO RETURN THE LAB OBJECT BUT I MIGHT NEED TO CREATE THE OBJECT OUTSIDE THE FUNCTION
+	public Lab buildLabFromFile(String labName, String fileName){
+		Lab lab = new Lab(labName);
+		MobileDevice md = null;
+		
+		try(BufferedReader br = new BufferedReader(new FileReader(fileName))){
+	
+			//variables needed to read each file
+			@SuppressWarnings("unused")
+			int lineCounter = 0, valueTag = 0;
+			String deviceName = "", lines;
+			
+			//Reads each file and outputs the values within each file
+			while((lines = br.readLine()) != null){
+				String[] line = lines.split(",");
+				deviceName = line[0];
+				valueTag = Integer.parseInt(line[1]);
+				
+				md = new MobileDevice(deviceName, valueTag);
+				lab.addDevice(md);
+			}			
+			//System.out.println("counter: " + lineCounter + "\n]");
+		}catch(FileNotFoundException ex) {
+			System.out.println("Unable to open file '" + fileName + "'");                
+		}catch(IOException ex) {
+			System.out.println("Error reading file '" + fileName + "'"); 
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return lab;
+	}
+	
+	public Lab isThereDeviceInLabs(MobileDevice md) {
+        //TODO
+        return null;
+    }
+	
+	//this is annoying me... got to figure out what i got to do with this one... definitely wrong
+	/*public Lab rentDeviceAvailable(MobileDevice md, String requestDate, String dueDate) {
+		Lab lab = new Lab(md, requestDate, dueDate);
+		
+		return lab;
+	}*/
+}

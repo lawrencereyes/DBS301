@@ -1,0 +1,141 @@
+
+package Ferguson013;
+
+import java.util.Vector;
+
+public class Main {
+
+    public static void main(String[] args) {
+
+
+        /* TASK 1 - build labs from files - at least two labs */
+
+        System.out.println("\n\n *" + " TASK 1 " + "*");
+        //TODO
+        
+        Labs collect1 = new Labs(9);
+        
+        Lab Newnham = collect1.addDevicesToLab("Newnham", "NewnhamLab.txt");
+        Lab York =collect1.addDevicesToLab("Seneca@York", "YorkLab.txt");
+        Lab Markham =collect1.addDevicesToLab("Markham", "Markham.txt");
+        Lab King =collect1.addDevicesToLab("King", "King.txt");
+        Lab TD =collect1.addDevicesToLab("TD", "TD.txt");
+        Lab CIBC =collect1.addDevicesToLab("CIBC", "CIBC.txt");
+        Lab RBC =collect1.addDevicesToLab("RBC", "RBC.txt");
+        Lab Tangerine =collect1.addDevicesToLab("Tangerine", "Tangerine.txt");
+        Lab ScotiaBank = collect1.addDevicesToLab("ScotiaBank", "ScotiaBank.txt");
+        
+        /* TASK 2 - ask for a device that is not in any lab inventory */
+
+        System.out.println("\n\n *" + " TASK 2 " + "*");
+        
+        MobileDevice md = new MobileDevice("Android", -86);
+        MobileDevice md1 = new MobileDevice("Android", 53);
+        
+        Lab lab = collect1.isThereDeviceInLabs(md);
+        if(lab != null)
+        	System.out.println("Device " + md.toString() + " exists in " + lab.labName);
+        else
+        	System.out.println( md.toString() + " does not exist in any lab");
+
+        //TODO
+
+         /* TASK 3 - ask for a device that is in a lab inventory
+         *  issue a rent request and print the device
+         *  issue the same rent request and print the device
+         *  return the device
+         *  issue the rent request with new dates and print the device
+         */
+System.out.println("\n* TASK 3 *");
+		
+		MobileDevice device = new MobileDevice("Android", 53);
+		
+		if(York.rentRequest(device, "10/30/2016", "11/10/2016")){
+			System.out.println(Helper.printAvailable(device, "10/30/2016", York));
+			System.out.println("wanted = " + device);
+			System.out.println(Helper.printUnavailable(device, "10/30/2016"));
+			System.out.println(Helper.printAvailable(device, "11/30/2016", York));
+		}else
+			System.out.println(Helper.printUnavailable(device, "10/30/2016"));
+		
+		if(York.rentRequest(device, "11/30/2016", "12/10/2016"))
+			System.out.println("wanted = " + device);
+		
+		/*
+		 * TASK 4
+		 * 1) ask for the same device in all labs
+		 * 2) look for the same device in all labs and return all the labs where the device is in the lab inventory
+		 * 3) look for the same device in all labs and return all the labs where the device is available to be rented.
+		 */
+		System.out.println("\n* TASK 4 *");
+		
+		if(Newnham.rentRequest(device, "10/30/2016", "12/10/2016")){
+			System.out.println(Helper.printAvailable(device, "10/30/2016", Newnham));
+			System.out.println("wanted = " + device);
+			System.out.println(Helper.printUnavailable(device, "10/30/2016"));
+			System.out.println(Helper.printAvailable(device, "10/30/2016", Newnham));
+			System.out.println("wanted = " + device);
+		}
+		
+        	
+        
+        /* TASK 5 - calculate maximum value tag for each lab */
+        System.out.println("\n\n *" + " TASK 5 " + "*");
+        int max = Newnham.findMaximumValueTag();
+        System.out.println("The greatest value tag of all the devices from lab " + Newnham.labName + " is " + max);
+        
+        /*
+         * 		System.out.println("\n* TASK 6 *");
+		//Check if is rented in a particular lab
+		if(device.isRented(newnham))
+			System.out.println("Device " + device + " is rented.");
+		else
+			System.out.println("Device " + device + " is not rented.");
+		
+		//check if is due
+		device.isDeviceOverdue();
+		
+		//Check in which lab(s) in the device
+		if(york.isThereDevice(device))
+			System.out.println("Device " + device + " is found at " + york.labName);
+		else
+			System.out.println("Device " + device + " is not found at " + york.labName);
+		
+		if(newnham.isThereDevice(device))
+			System.out.println("Device " + device + " is found at " + newnham.labName);
+		else
+			System.out.println("Device " + device + " is not found at " + newnham.labName);
+		
+		//date when it can be rented from the lab(s)
+		System.out.println(Helper.printAvailable(device, "12/10/2016", york));
+		System.out.println(Helper.printAvailable(device, "12/10/2016", newnham));
+         */
+        System.out.println("\n\n *" + " TASK 6 " + "*");
+        
+        
+        System.out.println(md1);
+        if(md1.isRented(Newnham)){
+        	System.out.println("Is this device rented");
+        }else
+        	System.out.println("This device is not rented");
+        
+        System.out.println("Is this device overdue: " + md1.isDeviceOverdue());
+        
+        Vector<Lab> temp = collect1.checkForDeviceInLabs(md1);
+		
+		if(temp != null)
+		{
+			System.out.println(md1 + " is available in: ");
+			for(Lab l : temp)
+				System.out.println(l.labName);
+		}
+		else
+			System.out.println(Helper.printNonexistent(md1));
+		
+		
+        System.out.println(md1.availableDate(lab));
+        
+       
+        //TODO
+    }
+}

@@ -1,0 +1,94 @@
+public class MobileDevice{
+	public String deviceName; //the device name
+	public int valueTag; // an integer between -100 and 100
+	Labs lab; // the lab having this device in its inventory
+	RentSettings rs; // rent settings
+	
+	MobileDevice(String deviceName, int valueTag){
+		this.deviceName = deviceName;
+		this.valueTag = valueTag;
+	}
+	
+	MobileDevice(String rentDate, String dueDate, Labs lab){
+		rentDevice(rentDate, dueDate, lab);
+	}
+	
+	//Needs to create an instance of the Labs object and work with its constructor...
+	//maybe... a constructor that calls rentDeviceAvailable(parameters);
+	public boolean rentDevice(String rentDate, String dueDate, Labs lab){
+		try{
+			//Rent Date
+			int rentDateYear = Integer.parseInt(rentDate.substring(6, 10));
+			int rentDateMonth = Integer.parseInt(rentDate.substring(0, 2));
+			int rentDateDay = Integer.parseInt(rentDate.substring(3, 5));
+			
+			//Due Date
+			int dueDateYear = Integer.parseInt(dueDate.substring(6, 10));
+			int dueDateMonth = Integer.parseInt(dueDate.substring(0, 2));
+			int dueDateDay = Integer.parseInt(dueDate.substring(3, 5));
+			
+			//Check is the date's format is correct for the rent date and the due date
+			if((rentDateDay <= 31 && rentDateDay > 0) && (rentDateMonth <= 12 && rentDateMonth > 0) && (rentDateYear == 2016)){
+				if((dueDateDay <= 31 && dueDateDay > 0) && (dueDateMonth <= 12 && dueDateMonth > 0) && (dueDateYear >= 2016)){
+					//Check if due date expired
+					if((rentDateYear <= dueDateYear) && (rentDateMonth <= dueDateMonth) && (rentDateDay <= dueDateDay)){
+						if(rs.getBorrowed() == true){
+							System.out.println("This device is already been borrowed.");
+							return false;
+						}else{
+							rs = new RentSettings(rentDate, dueDate, true);
+							return true;
+						}
+					}else
+						throw new RentPeriodException();
+				}else
+					throw new DateFormatException("due date");
+			}else
+				throw new DateFormatException("rent date");
+		}catch(DateFormatException date){
+			System.err.println("The date entered is not valid. Correct format for date is (MM/DD/YYYY).");
+			return false;
+		}catch(RentPeriodException rent){
+			System.err.println("The rent period of the device is over.");
+			return false;
+		}
+	}
+	
+	//is called in the Labs class when the dates are checked to see if the the device is rented already
+	//STILL NEED TO WORK ON IT... CHECK
+	private class RentSettings {
+		private String rentDate; // date when the item is requested
+		private String dueDate; // date when the item must be returned
+		private boolean borrowed = false; // true if the item is rented
+		
+		String getRentDate(){
+			return rentDate;
+		}
+		
+		String getDueDate(){
+			return dueDate;
+		}
+		
+		boolean getBorrowed(){
+			return borrowed;
+		}
+		
+		void setRentDate(String rentDate){
+			this.rentDate = rentDate;
+		}
+		
+		void setDueDate(String dueDate){
+			this.dueDate = dueDate;
+		}
+		
+		void setBorrowed(boolean Borrowed){
+			this.borrowed = Borrowed;
+		}
+		
+		RentSettings(String rentDate, String dueDate, boolean borrowed){
+			setRentDate(rentDate);
+			setDueDate(dueDate);
+			setBorrowed(borrowed);
+		}
+	}
+}

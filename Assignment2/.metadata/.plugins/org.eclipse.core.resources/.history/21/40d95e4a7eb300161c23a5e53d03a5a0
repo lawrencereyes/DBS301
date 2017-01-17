@@ -1,0 +1,117 @@
+
+package Ferguson013;
+
+import java.util.Vector;
+
+public class Lab implements MaxTagValue {
+
+
+    String labName;
+    
+    Vector<MobileDevice> devices;
+    
+    
+    public String getLabName() {
+		return labName;
+	}
+
+	public void setLabName(String labName) {
+		this.labName = labName;
+	}
+
+	public Vector<MobileDevice> getDevices() {
+		return devices;
+	}
+
+	public void setDevices(Vector<MobileDevice> devices) {
+		this.devices = devices;
+	}
+
+
+    public Lab(String labName) {
+        this.setLabName(labName);
+        devices = new Vector<MobileDevice>();
+    }
+
+    public void addDevice(MobileDevice md) {
+    	getDevices().addElement(md);
+    }
+
+    @Override
+    public String toString() {
+        String r = "";
+        for(MobileDevice device : devices)
+        	r += device.toString() + '\n';
+        return r;
+    }
+
+    //
+    public boolean isThereDevice(MobileDevice md) {
+    	  boolean found = false;
+          for(MobileDevice dev : devices){
+          	if(dev.equals(md))
+          		found = true;
+          }   	
+          return found;
+    }
+
+    @Override
+	public int findMaximumValueTag() {
+
+    	int[] arr = new int[getDevices().size()];
+    	
+    	for(int i = 0; i < getDevices().size(); i++){
+    		arr[i] = getDevices().get(i).getValueTag();
+    		
+    	}
+    	
+       //TODO
+       return Finder.findMaximumValueTag(arr);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        
+        if(o == null)
+        	return false;
+        if(this == o)
+        	return true;
+        if(!(o instanceof Lab))
+        	return false;
+        return ((Lab)o).labName.equals(labName) && ((Lab)o).devices.equals(devices);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = labName != null ? labName.hashCode() : 0;
+        result = 31 * result + (devices != null ? devices.hashCode() : 0);
+        return result;
+    }
+
+
+    public boolean rentRequest(MobileDevice wanted, String requestDate, String dueDate) {
+    	
+		if(!(wanted.isRented(this))){
+			wanted.rentDevice(requestDate, dueDate,this);
+			return true;
+		}
+		
+    return false;
+        
+    }
+    
+    public boolean rentable(MobileDevice md)
+    {
+    	for(int i = 0; i < getDevices().size(); i++)
+    	{
+    		if(getDevices().get(i).equals(md))
+    		{
+    			if(!md.lab.equals(this))
+    				return true;
+    		}
+    	}
+    	
+    	return false;
+}
+    
+}

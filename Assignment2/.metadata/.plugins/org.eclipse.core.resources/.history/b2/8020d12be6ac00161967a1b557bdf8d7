@@ -1,0 +1,47 @@
+import java.util.Vector;
+
+public class Lab implements MaxTagValue{
+	public String labName; // lab name
+	public Vector<MobileDevice> devices; // data structure that keeps all devices
+	
+	//think i fixed it now
+	Lab(String labName, MobileDevice md){
+		this.labName = labName;
+		
+		md = new MobileDevice(md.deviceName, md.valueTag);
+		devices.add(md);
+	}
+	
+	Lab(MobileDevice md, String rentDate, String dueDate){
+		rentRequest(md, rentDate, dueDate);
+	}
+	
+	String getLabName(){
+		return labName;
+	}
+	
+	public int findMaximumValueTag() {
+		int maxValueTag = devices.get(0).valueTag;
+		
+		for(int i = 0; i < devices.size(); i++){
+			if(devices.get(i).valueTag > maxValueTag){
+				maxValueTag = devices.get(i).valueTag;
+			}
+		}
+		
+		return maxValueTag;
+	}
+	
+	//It is supposed to ask if the device is already rented or not... returns true or false... 
+	public boolean rentRequest(MobileDevice wanted, String requestDate, String dueDate){
+		boolean borrowed = false;
+		Labs lab = new Labs(wanted, requestDate, dueDate);
+		
+		for(int i = 0; i < devices.size(); i++){
+			wanted = new MobileDevice(requestDate, dueDate, lab);
+			wanted.
+		}
+		
+		return borrowed;
+	}
+}

@@ -1,0 +1,132 @@
+/*
+ * Java assignment 2 - JAC444
+ * @author: Lawrence Reyes
+ * @student number: 108307158 
+ */
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+
+public class Labs {
+	public Lab[] labs; // an array that stores all labs
+	public int numberOfLabs; // number of labs in collection
+	int counter = 0;
+	
+	/*
+	 * @constructor 
+	 */
+	public Labs(int numberOfLabs) {
+		this.numberOfLabs = numberOfLabs;
+		labs = new Lab[numberOfLabs];	
+	}
+	
+	/*
+	 * Add each device to a specific lab
+	 * @param labName - name of the lab
+	 * @param labFileName - name of the file
+	 * @return lab is created
+	 */
+	public Lab addDevicesToLab(String labName, String labFileName) {
+        Lab lab = buildLabFromFile(labName, labFileName);
+        System.out.println("Lab = " + labName + "\n[\n" + lab + "]");
+        return lab;
+    }
+	
+	/*
+	 * Function reads a lab file and allocated the devices in the lab
+	 * @param labName - name of the lab
+	 * @param fileName - name of the file
+	 * @return lab that is created
+	 */
+	public Lab buildLabFromFile(String labName, String fileName){
+		Lab lab = new Lab(labName);
+		MobileDevice md = null;
+		String lines;
+		
+		try(BufferedReader br = new BufferedReader(new FileReader(fileName))){
+			int valueTag = 0;
+			String deviceName = "";
+			
+			while((lines = br.readLine()) != null){
+				String[] line = lines.split(",");
+				deviceName = line[0];
+				valueTag = Integer.parseInt(line[1]);
+				
+				md = new MobileDevice(deviceName, valueTag);
+				md.setLab(lab);
+				lab.addDevice(md);
+			}		
+			labs[counter] = lab;
+			counter++;
+		}catch(FileNotFoundException ex) {
+			System.out.println("Unable to open file '" + fileName + "'");                
+		}catch(IOException ex) {
+			System.out.println("Error reading file '" + fileName + "'"); 
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return lab;
+	}
+	
+	/*
+	 * Takes a device and rents it if it is available
+	 * @param MobileDevice - device wanted to rent
+	 * @param requestDate - date wanted to rent it
+	 * @param dueDate - date it has to be returned
+	 * @return lab if it is available
+	 * @return null if it is not available
+	 */
+	public Lab rentDeviceAvailable(MobileDevice md, String requestDate, String dueDate) {
+		for(Lab lab : labs){
+			if(md.rentDevice(requestDate, dueDate, lab))
+				return lab;
+		}
+		return null;
+	}
+	
+	/*
+	 * Function goes through the labs array and checks if the device passed is in any lab
+	 * @param MobileDevice device we check for in all the labs
+	 * @return the lab in which the device is found
+	 * @return null if it is not found
+	 */
+	public Lab isThereDeviceInLabs(MobileDevice md) {
+		for(Lab lab : labs){
+			if(lab.isThereDevice(md))
+				return lab;
+        }
+        return null;
+	}
+	
+	/*
+  	 * @equals
+  	 * @toString
+  	 * @hashCode
+  	 */
+	@Override
+    public boolean equals(Object o) {
+    	if(this == o)
+			return true;
+		if(o == null)
+			return false;
+		if(!(o instanceof Labs))
+			return false;
+		return ((Labs)o).labs.equals(labs) && ((Labs)o).numberOfLabs == numberOfLabs;
+    } 
+
+    @Override
+    public String toString() {
+        String r = "";
+        for(Lab lab : labs)
+        	r += "Lab : " + lab.labName;
+        return r;
+    }
+    
+    @Override
+    public int hashCode() {
+        int result = labs != null ? labs.hashCode() : 0;
+        result = 31 * result + numberOfLabs;
+        return result;
+    }
+}

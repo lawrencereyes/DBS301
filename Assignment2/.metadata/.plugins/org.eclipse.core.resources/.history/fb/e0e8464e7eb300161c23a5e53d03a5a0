@@ -1,0 +1,218 @@
+
+package Ferguson013;
+
+class MobileDevice {
+
+    String       deviceName;  // the device name
+    int          valueTag;    // an integer between -100 and 100
+	Lab          lab;         // the lab having this device it its inventory
+    RentSettings rs;          // rent settings
+    
+ 
+    public String getDeviceName() {
+		return deviceName;
+	}
+
+	public void setDeviceName(String deviceName) {
+		this.deviceName = deviceName;
+	}
+
+	public int getValueTag() {
+		return valueTag;
+	}
+
+	public void setValueTag(int valueTag) {
+		this.valueTag = valueTag;
+	}
+
+	public Lab getLab() {
+		return lab;
+	}
+
+    public MobileDevice() {
+    }
+
+    public MobileDevice(String deviceName, int valueTag) {
+    	setDeviceName(deviceName);
+    	setValueTag(valueTag);
+    }
+
+    public void setLab(Lab lab) {
+        this.lab = lab;
+    }
+
+    // set the rent dates; if dates are not valid catch DateFormatException and return false,
+    // if rentDate > dueDate catch RentPeriodException and return false
+    // if one the exceptions occur there is no RentSettings object
+    public boolean rentDevice(String rentDate, String dueDate, Lab lab) {
+    	
+		boolean rentDevice = false;
+		try{
+			if(Helper.isValidDate(rentDate) && Helper.isValidDate(dueDate)){
+				if(Helper.timeDifference(rentDate, dueDate) > 0){
+					RentSettings rs = new RentSettings(rentDate, dueDate, lab);
+					setLab(lab);
+					setRs(rs);
+					rentDevice = true;
+				}else
+					throw new RentPeriodException();
+			}else
+				throw new DateFormatException();
+		}catch(DateFormatException date){
+			System.err.println("The date entered is not valid. Correct format for date is (MM/DD/YYYY).");
+		}catch(RentPeriodException rent){
+			System.err.println("The rent period of the device is over.");
+		}
+		return rentDevice;
+    }
+
+    // destroy the RentSettings object for this device
+    public void returnDevice(Lab lab) {
+    	this.rs = null;
+    }
+
+    // return the date when this device is available
+    public String availableDate(Lab lab) {
+        return "This device will be available: " + rs.getDueDate() + '\n';
+    }
+
+    // returns true if the current date is greater than the due date
+    public boolean isDeviceOverdue() {
+        //TODO
+    	try {
+			if(Helper.timeDifference(Helper.getCurrentDate(), rs.getDueDate()) <= 0){
+				return true;
+			}
+		} catch (DateFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        return false;
+    }
+
+    public boolean isRented(Lab l) {
+    	
+    	 boolean rented = false;   
+         for(MobileDevice md : l.devices){
+         	if(l.isThereDevice(md) && rs.borrowed)
+         		rented = true;
+         } 
+         return rented;
+    }
+
+    public RentSettings getRs() {
+        return rs;
+    }
+
+    public void setRs(RentSettings rs) {
+        this.rs = rs;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if(o == this){
+        	return true;
+        }
+        if(o == null){
+        	return false;
+        }
+        if(!(o instanceof MobileDevice)){
+        	return false;
+        }
+        return ((MobileDevice)o).deviceName.equals(deviceName) && ((MobileDevice)o).valueTag == valueTag;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = deviceName != null ? deviceName.hashCode() : 0;
+        result = 31 * result + valueTag;
+        return result;
+    }
+
+    @Override
+    public String toString() {
+    	
+		String r;
+		
+		if(lab == null){
+			r = deviceName();
+		}
+		else{
+			r = deviceWithLab();
+		}
+		
+		if(rs != null)
+			r += " " + rs.toString();
+
+		return r;
+    }
+
+    public String deviceName() {
+        return "(" + deviceName + ", " + valueTag + ")";
+    }
+
+    public String deviceWithLab() {
+        return "(" + deviceName + ", " + valueTag + "=>" + getLab().getLabName() + ")";
+    }
+    
+    class RentSettings {
+
+        private String rentDate;          // date when the item is requested
+        private String dueDate;           // date when the item must be returned
+        private boolean borrowed = false; // true if the item is rented
+
+        //default ctr
+        private RentSettings() throws DateFormatException {
+            rentDate = null;
+            setDueDate(null);
+            setBorrowed(false);
+        }
+
+        // private ctr must throw DateFormatException and RentPeriodException
+        private RentSettings(String rentDate, String dueDate, Lab lab) throws DateFormatException, RentPeriodException {
+            	this.rentDate = rentDate;
+            	this.setDueDate(dueDate);
+            	setBorrowed(true);
+        }
+        @Override
+        public String toString() {
+            return "RentSettings{" +
+                    "rentDate='" + rentDate + '\'' +
+                    ", dueDate='" + getDueDate() + '\'' + MobileDevice.this.lab.labName +
+                    ", borrowed=" + isBorrowed() +
+                    '}';
+        }
+        @Override
+		public boolean equals (Object o){
+        	  if(o == null){
+              	return false;
+              }
+              if(o == this){
+              	return true;
+              }
+              if(!(o instanceof RentSettings)){
+              	return false;
+              }
+        	
+              return ((RentSettings)o).rentDate.equals(rentDate) && ((RentSettings)o).getDueDate().equals(getDueDate()) && ((RentSettings)o).isBorrowed() == isBorrowed();
+        	
+        }
+
+		public String getDueDate() {
+			return dueDate;
+		}
+
+		public void setDueDate(String dueDate) {
+			this.dueDate = dueDate;
+		}
+
+		public boolean isBorrowed() {
+			return borrowed;
+		}
+
+		public void setBorrowed(boolean borrowed) {
+			this.borrowed = borrowed;
+		}
+    }
+}
